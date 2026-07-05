@@ -22,7 +22,7 @@ class Solution:
         return self.foo(n, heights, k, dp)
 
 # Time complexity: O(n*k)
-# Space complexity: O(n)
+# Space complexity: O(n + n)
         
 if __name__ == "__main__":
     test1 = [10, 5, 20, 0, 15]
