@@ -2,27 +2,32 @@ class Solution:
     def foo(self, index, heights, dp):
         if index == 0:
             return 0
-
+        
         if dp[index] != -1:
             return dp[index]
+
+        one = abs(heights[index-1] - heights[index]) + self.foo(index-1, heights, dp)
         
-        left = self.foo(index-1, heights, dp) + abs(heights[index-1] - heights[index])
-        right = float("inf")
-
+        two = float("inf")
         if index >= 2:
-            right = self.foo(index-2, heights, dp) + abs(heights[index-2] - heights[index])
+            two = abs(heights[index-2] - heights[index]) + self.foo(index-2, heights, dp)
 
-        dp[index] = min(left, right)
+        dp[index] = min(one, two)
         return dp[index]
-    
+        
     def frogJump(self, heights):
-        dp = [-1]*len(heights)
-        return self.foo(len(heights)-1, heights, dp)
+        n = len(heights)-1
+        dp = [-1]*(n+1)
+
+        return self.foo(n, heights, dp)
+
+# Time complexity: O(n)
+# Space complexity: O(n + n)
     
 if __name__ == "__main__":
-    test1 = [10, 20, 30, 10]
-    test2 = [30, 10, 60, 10, 60, 50]
-    
     dummy = Solution()
-    res1 = dummy.frogJump(test1)
-    print(res1)
+    
+    print(dummy.frogJump([2, 1, 3, 5, 4]))
+    print(dummy.frogJump([7, 5, 1, 2, 6]))
+
+        

@@ -3,21 +3,25 @@ class Solution:
         if index == 0:
             return 0
 
-        left = self.foo(index-1, heights) + abs(heights[index-1] - heights[index])
-        right = float("inf")
-
+        one = abs(heights[index-1] - heights[index]) + self.foo(index-1, heights)
+        
+        two = float("inf")
         if index >= 2:
-            right = self.foo(index-2, heights) + abs(heights[index-2] - heights[index])
+            two = abs(heights[index-2] - heights[index]) + self.foo(index-2, heights)
 
-        return min(left, right)
-    
+        return min(one, two)
+        
     def frogJump(self, heights):
-        return self.foo(len(heights)-1, heights)
+        n = len(heights)-1
+        return self.foo(n, heights)
+
+# Time complexity: O(2^n)
+# Space complexity: O(n)
     
 if __name__ == "__main__":
-    test1 = [10, 20, 30, 10]
-    test2 = [30, 10, 60, 10, 60, 50]
-    
     dummy = Solution()
-    res1 = dummy.frogJump(test1)
-    print(res1)
+    
+    print(dummy.frogJump([2, 1, 3, 5, 4]))
+    print(dummy.frogJump([7, 5, 1, 2, 6]))
+
+        
