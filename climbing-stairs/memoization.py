@@ -18,7 +18,7 @@ class Solution:
         return self.foo(n, dp)
 
 # Time complexity: O(n)
-# Space complexity: O(n)
+# Space complexity: O(n + n)
 
 if __name__ == "__main__":
     dummy = Solution()

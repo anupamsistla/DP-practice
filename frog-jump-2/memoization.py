@@ -1,26 +1,29 @@
 class Solution:
-    def foo(self, index, heights, dp, k):
+    def foo(self, index, heights, k, dp):
         if index == 0:
             return 0
         
         if dp[index] != -1:
             return dp[index]
 
-        minRes = float("inf")
+        minCost = float("inf")
         for i in range(1, k+1):
-            newI = index - i
+            newIndex = index - i
 
-            if newI >= 0:
-                res = self.foo(newI, heights, dp, k) + abs(heights[newI] - heights[index])
-                minRes = min(minRes, res)
-    
-        dp[index] = minRes
-        return minRes
-
+            if newIndex >= 0:
+                minCost = min(minCost, abs(heights[newIndex] - heights[index]) + self.foo(newIndex, heights, k, dp))
+            
+        dp[index] = minCost
+        return minCost
+            
     def frogJump(self, heights, k):
-        dp = [-1]*len(heights)
-        return self.foo(len(heights)-1, heights, dp, k)
-    
+        n = len(heights)-1
+        dp = [-1]*(n+1)
+        return self.foo(n, heights, k, dp)
+
+# Time complexity: O(n*k)
+# Space complexity: O(n)
+        
 if __name__ == "__main__":
     test1 = [10, 5, 20, 0, 15]
     test2 = [15, 4, 1, 14, 15]    

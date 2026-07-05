@@ -1,20 +1,24 @@
 class Solution:
     def frogJump(self, heights, k):
-        dp = [0]*len(heights)
-        
-        for index in range(1, len(heights)):
-            minRes = float("inf")
+        n = len(heights)-1
+        dp = [-1]*(n+1)
+        dp[0] = 0
 
-            for i in range(1, k+1):
-                newI = index - i
-
-                if newI >= 0:
-                    res = dp[newI] + abs(heights[newI] - heights[index])
-                    minRes = min(minRes, res)
+        for index in range(1, n+1):
+            minCost = float("inf")
             
-            dp[index] = minRes
+            for i in range(1, k+1):
+                newIndex = index - i
+                
+                if newIndex >= 0:
+                    minCost = min(minCost, abs(heights[newIndex] - heights[index]) + dp[newIndex])
+            dp[index] = minCost
+        
+        return dp[n]
 
-        return dp[-1]    
+# Time complexity: O(n*k)
+# Space complexity: O(n)
+        
 if __name__ == "__main__":
     test1 = [10, 5, 20, 0, 15]
     test2 = [15, 4, 1, 14, 15]    
