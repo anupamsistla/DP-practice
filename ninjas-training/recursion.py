@@ -1,25 +1,35 @@
 class Solution:
-    def foo(self, day, last, matrix):
-        maxi = 0
-
-        if day == 0:
-            for task in range(3):
-                if task != last:
-                    maxi = max(maxi, matrix[day][task])
-            return maxi
-        for task in range(3):
-            if task != last:
-                points = self.foo(day-1, task, matrix) + matrix[day][task]
-                maxi = max(points, maxi)
-            
-        return maxi
-
+    def foo(self, index, last, matrix):
+        toRet = 0
+        if index == 0:
+            for i in range(3):
+                if i != last:
+                    toRet = max(toRet, matrix[index][i])
+            return toRet
+        
+        for i in range(3):
+            if i != last:
+                toRet = max(toRet, matrix[index][i] + self.foo(index-1, i, matrix))
+    
+        return toRet
+    
     def ninjaTraining(self, matrix):
-        n = len(matrix)
-        return self.foo(n-1, 3, matrix)
+        n = len(matrix)-1
+
+        return self.foo(n, 3, matrix)
+        
+
+# Time complexity: O(3^n)
+# Space complexity: O(n)
 
 if __name__ == "__main__":
-    test1 = [[10, 40, 70], [20, 50, 80], [30, 60, 90]]
-    
+    test1 = [[10, 30, 70], [20, 50, 80], [30, 60, 90]]
+    test2 = [[70, 40, 10], [180, 20, 5], [200, 60, 30]]
+    test3 = [[20, 10, 10], [20, 10, 10], [20, 30, 10]]
+
     dummy = Solution()
+
     print(dummy.ninjaTraining(test1))
+    print(dummy.ninjaTraining(test2))
+    print(dummy.ninjaTraining(test3))
+
