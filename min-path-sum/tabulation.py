@@ -1,0 +1,30 @@
+from typing import List
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])        
+        dp = [[-1]*n for _ in range(m)]
+        
+        for i in range(m):
+            for j in range(n):
+                if i == 0 and j == 0:
+                    dp[i][j] = grid[i][j]
+
+                else:
+                    up = grid[i][j]
+                    left = grid[i][j]
+
+                    up += dp[i-1][j] if i > 0 else float("inf")
+                    left += dp[i][j-1] if j > 0 else float("inf")
+                    dp[i][j] = min(up, left)
+
+        return dp[m-1][n-1]
+    
+# Time complexity: O(m*n)
+# Space complexity: O(m*n)
+
+if __name__ == "__main__":
+    dummy = Solution()
+
+    print(dummy.minPathSum([[5,9,6],[11,5,2]]))
+    print(dummy.minPathSum([[1,2,3],[4,5,6]]))
