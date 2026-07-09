@@ -1,26 +1,25 @@
 class Solution:
     def isSubsetSum(self, arr, target):
-        curr = [0]*(target+1)
-        curr[0] = True
-        
-        curr[0][arr[0]] = True
+        dp = [[0]*(target+1) for _ in range(len(arr))]
+
+        for i in range(len(arr)):
+            dp[i][0] = True
+
+        dp[0][arr[0]] = True
 
         for i in range(1, len(arr)):
-            temp = [0]*(target+1)
             for target in range(1, target+1):
-                notTake = curr[target]
+                notTake = dp[i-1][target]
                 take = False
 
                 if target >= arr[i]:
-                    take = curr[target-arr[i]]
+                    take = dp[i-1][target-arr[i]]
         
-                temp[target] = notTake or take
-            curr = temp
-
-        return curr[target]
+                dp[i][target] = notTake or take
+        return dp[len(arr)-1][target]
 
 # Time complexity: O(n*target)
-# Space complexity: O(n)
+# Space complexity: O(n*target)
 
 if __name__ == "__main__":
     dummy = Solution()

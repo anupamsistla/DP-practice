@@ -1,29 +1,26 @@
 class Solution:
-    def foo(self, index, target, arr, dp):
-        if target == 0:
-            return True
-        
-        if dp[index][target] != -1:
-            return dp[index][target]
-    
-        if index == 0:
-            return arr[0] == target
-        
-        notTake = self.foo(index-1, target, arr, dp)
-        take = False
-
-        if target >= arr[index]:
-            take = self.foo(index-1, target-arr[index], arr, dp)
-        
-        dp[index][target] = notTake or take
-        return dp[index][target]
-        
     def isSubsetSum(self, arr, target):
-        dp = [[-1]*(target+1) for _ in range(len(arr))]
-        return self.foo(len(arr)-1, target, arr, dp)
+        curr = [0]*(target+1)
+        curr[0] = True
+        
+        curr[0][arr[0]] = True
+
+        for i in range(1, len(arr)):
+            temp = [0]*(target+1)
+            for target in range(1, target+1):
+                notTake = curr[target]
+                take = False
+
+                if target >= arr[i]:
+                    take = curr[target-arr[i]]
+        
+                temp[target] = notTake or take
+            curr = temp
+
+        return curr[target]
 
 # Time complexity: O(n*target)
-# Space complexity: O(n*target + n)
+# Space complexity: O(n)
 
 if __name__ == "__main__":
     dummy = Solution()
