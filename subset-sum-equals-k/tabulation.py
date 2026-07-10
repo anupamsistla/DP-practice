@@ -1,6 +1,6 @@
 class Solution:
     def isSubsetSum(self, arr, target):
-        dp = [[0]*(target+1) for _ in range(len(arr))]
+        dp = [[False]*(target+1) for _ in range(len(arr))]
 
         for i in range(len(arr)):
             dp[i][0] = True

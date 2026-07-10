@@ -1,12 +1,13 @@
 class Solution:
     def isSubsetSum(self, arr, target):
-        curr = [0]*(target+1)
+        curr = [False]*(target+1)
         curr[0] = True
         
-        curr[0][arr[0]] = True
+        curr[arr[0]] = True
 
         for i in range(1, len(arr)):
-            temp = [0]*(target+1)
+            temp = [False]*(target+1)
+            temp[0] = True
             for target in range(1, target+1):
                 notTake = curr[target]
                 take = False
@@ -20,7 +21,7 @@ class Solution:
         return curr[target]
 
 # Time complexity: O(n*target)
-# Space complexity: O(n)
+# Space complexity: O(target)
 
 if __name__ == "__main__":
     dummy = Solution()
