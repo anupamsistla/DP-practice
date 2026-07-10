@@ -23,7 +23,7 @@ class Solution:
                 dp[i][target] = take or notTake
         
         minDiff = float("inf")
-        n = len(nums)-1
+        n = len(nums)
 
         for i in range(totalSum // 2 + 1):
             if dp[n-1][i] == True:
