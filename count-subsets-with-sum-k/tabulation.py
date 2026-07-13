@@ -12,7 +12,7 @@ class Solution:
                 notTake = dp[i-1][k]
                 take = 0
 
-                if K >= arr[i]:
+                if k >= arr[i]:
                     take = dp[i-1][k - arr[i]]
         
                 dp[i][k] = notTake + take

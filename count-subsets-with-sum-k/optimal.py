@@ -13,7 +13,7 @@ class Solution:
                 notTake = prev[k]
                 take = 0
 
-                if K >= arr[i]:
+                if k >= arr[i]:
                     take = prev[k - arr[i]]
         
                 curr[k] = notTake + take
