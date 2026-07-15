@@ -5,32 +5,34 @@ class Solution:
         for num in arr:
             totalSum += num 
         
-        dp = [[0]*(totalSum + 1) for _ in range(n)]
+        prev = [0]*(totalSum + 1)
 
         for t in range(totalSum + 1):
             if arr[0] == 0 and t == 0:
-                dp[0][t] = 2
+                prev[t] = 2
             
             elif arr[0] == t or t == 0:
-                dp[0][t] = 1
+                prev[t] = 1
         
         for i in range(1, n):
+            curr = [0]*(totalSum + 1)
             for t in range(totalSum + 1):
-                notTake = dp[i-1][t]
+                notTake = prev[t]
                 take = 0
 
                 if t >= arr[i]:
-                    take = dp[i-1][t - arr[i]]
+                    take = prev[t - arr[i]]
         
-                dp[i][t] = notTake + take
-        
+                curr[t] = notTake + take
+            prev = curr
+
         count = 0
 
         for i in range(totalSum + 1):
             currDiff = totalSum - i - i
 
-            if currDiff == target and dp[n-1][i] != 0:
-                count += dp[n-1][i]
+            if currDiff == target and prev[i] != 0:
+                count += prev[i]
         return count
 
 # Time complexity: O(n * totalSum)
