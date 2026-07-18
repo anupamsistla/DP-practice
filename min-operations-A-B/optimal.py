@@ -1,5 +1,5 @@
 class Solution:
-    def lcs(self, str1, str2):
+    def minOperations(self, str1, str2):
         n, m = len(str1), len(str2)
         prev = [0]*(m+1)
 
@@ -12,14 +12,18 @@ class Solution:
                 else:
                     curr[j] = max(prev[j], curr[j-1])
             prev = curr
-        return prev[m]
+
+        lcs = prev[m]
+        leftDel = n - lcs
+        rightAdd = m - lcs
+        
+        return leftDel + rightAdd
 
 # Time complexity: O(m*n)
 # Space complexity: O(m)
         
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.lcs("bdefg", "bfg"))
-    print(dummy.lcs("mnop", "mnq"))
-    print(dummy.lcs("abc","dafb"))
-    print(dummy.lcs("acd", "ced"))
+    print(dummy.minOperations("kitten", "sitting"))
+    print(dummy.minOperations("flaw", "lawn"))
+    print(dummy.minOperations("abcdef","ghijkl"))
