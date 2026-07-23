@@ -9,7 +9,7 @@ class Solution:
             profit = max(-arr[index] + self.foo(index + 1, 0, arr, n), self.foo(index + 1, 1, arr, n))
 
         else:
-            profit = max(arr[index] + self.foo(index + 1, 1, arr, n), self.foo(index+1, 0, arr, n))
+            profit = max(arr[index] + self.foo(index + 1, 1, arr, n), self.foo(index + 1, 0, arr, n))
 
         return profit
 
