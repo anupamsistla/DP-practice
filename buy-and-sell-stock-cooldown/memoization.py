@@ -23,7 +23,7 @@ class Solution:
         return self.foo(0, 1, prices, len(prices), dp)
 
 # Time complexity: O(n*2)
-# Space complexity: O(n) + O(n) = O(n)
+# Space complexity: O(n*2) + O(n) = O(n)
 
 if __name__ == "__main__":
     dummy = Solution()
