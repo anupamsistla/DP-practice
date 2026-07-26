@@ -24,6 +24,9 @@ class Solution:
         res.append(nums[lastIndex])
         return res
 
+# Time complexity: O(n^2)
+# Space complexity: O(n)
+
 if __name__ == "__main__":
     dummy = Solution()
     print(dummy.largestDivisibleSubset([3, 5, 10, 20]))
