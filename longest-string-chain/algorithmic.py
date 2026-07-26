@@ -27,6 +27,11 @@ class Solution:
             maxI = max(maxI, dp[i])
         return maxI
 
+# Time complexity: O(n^2 * m)
+# Space complexity: O(n)
+
+# Note: m is the length of the longest word
+
 if __name__ == "__main__":
     dummy = Solution()
     print(dummy.longestStringChain(["a", "ab", "abc", "abcd", "abcde"]))
