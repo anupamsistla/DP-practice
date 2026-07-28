@@ -1,22 +1,4 @@
 class Solution:
-    def foo(self, i, j, nums, dp):
-        if dp[i][j] != -1:
-            return dp[i][j]
-
-        if i == j:
-            return 0
-
-        minOps = float("inf")
-
-        for k in range(i, j):
-            steps = nums[i-1] * nums[k] * nums[j] + self.foo(i, k, nums, dp) + self.foo(k+1, j, nums, dp)
-
-            if steps < minOps:
-                minOps = steps
-
-        dp[i][j] = minOps
-        return dp[i][j]
-
     def matrixMultiplication(self, nums):
         n = len(nums)
         dp = [[0]*n for _ in range(n)]
