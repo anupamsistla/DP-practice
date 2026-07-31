@@ -1,37 +1,54 @@
 class Solution:
-    def foo(self, index, heights, dp):
+    def foo(self, index, heights, k, dp):
         if dp[index] != -1:
             return dp[index]
-        
+
         if index == 0:
             return 0
 
-        oneStep = abs(heights[index] - heights[index-1]) + self.foo(index-1, heights, dp)
-        twoStep = float("inf")
-        if index > 1:
-            twoStep = abs(heights[index] - heights[index-2]) + self.foo(index-2, heights, dp)
+        minCost = float("inf")
+        for jump in range(1, k + 1):
+            currCost = float("inf")
 
-        dp[index] = min(oneStep, twoStep)
+            if index - jump >= 0:
+                currCost = abs(heights[index] - heights[index - jump]) + self.foo(index - jump, heights, k, dp)
+
+            minCost = min(minCost, currCost)
+
+        dp[index] = minCost
         return dp[index]
-    
-    def frogJump(self, heights):
-        n = len(heights) 
 
-        prev2 = float("inf")
-        prev1 = 0
+    def frogJump(self, heights, k):
+        n = len(heights)
+        dp = [-1]*n
+
+        dp[0] = 0
 
         for index in range(1, n):
-            oneStep = abs(heights[index] - heights[index-1]) + prev1
-            twoStep = float("inf")
-            if index > 1:
-                twoStep = abs(heights[index] - heights[index-2]) + prev2
+            minCost = float("inf")
+            for jump in range(1, k + 1):
+                currCost = float("inf")
+    
+                if index - jump >= 0:
+                    currCost = abs(heights[index] - heights[index - jump]) + dp[index - jump]
+    
+                minCost = min(minCost, currCost)
+            dp[index] = minCost
 
-            prev2 = prev1
-            prev1 = min(oneStep, twoStep)
+        return dp[n-1]
 
-        return prev1
 
 if __name__ == "__main__":
+    test1 = [10, 5, 20, 0, 15]
+    test2 = [15, 4, 1, 14, 15]    
+    test3 = [15, 4, 1, 14, 15]
+
     dummy = Solution()
-    print(dummy.frogJump([2, 1, 3, 5, 4]))
-    print(dummy.frogJump([7, 5, 1, 2, 6]))
+    res1 = dummy.frogJump(test1, 2)
+    print(res1)
+
+    res2 = dummy.frogJump(test2, 3)
+    print(res2)
+
+    res3 = dummy.frogJump(test3, 4)
+    print(res3)
