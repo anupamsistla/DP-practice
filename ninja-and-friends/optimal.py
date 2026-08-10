@@ -30,7 +30,7 @@ class Solution:
         return ahead[0][m-1]
 
 # Time complexity: O(n * m^2)
-# Space complexity: O(n * m) 
+# Space complexity: O(m^2) 
 
 if __name__ == "__main__":
     dummy = Solution()
