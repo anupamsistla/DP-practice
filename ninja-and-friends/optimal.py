@@ -24,13 +24,13 @@ class Solution:
                                 maxSum = max(maxSum, currSum + ahead[j1 + x][j2 + y])
             
                     curr[j1][j2] = maxSum
-                    
+
             ahead = curr
 
         return ahead[0][m-1]
 
 # Time complexity: O(n * m^2)
-# Space complexity: O(n * m^2) 
+# Space complexity: O(n * m) 
 
 if __name__ == "__main__":
     dummy = Solution()
