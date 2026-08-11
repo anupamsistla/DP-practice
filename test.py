@@ -1,62 +1,55 @@
 class Solution:
-    def foo(self, i, j1, j2, g, dp):
-        if j1 < 0 or j2 < 0 or j1 >= len(g[0]) or j2 >= len(g[0]):
-            return float("-inf")
-
-        if dp[i][j1][j2] != -1:
-            return dp[i][j1][j2]
-
-        if i == 0:
-            if j1 != j2:
-                return g[i][j1] + g[i][j2]
+    def foo(self, index, arr, target, dp):
+        if dp[index][target] != -1:
+            return dp[index][target]
+        
+        if index == 0:
+            if target == arr[index]:
+                return True
 
             else:
-                return g[i][j1]
+                return False
 
+        if target == 0:
+            return True
 
-        dirs = [-1, 0, 1]
+        notTake = self.foo(index-1, arr, target, dp)
+        take = False
+        if target > 0 and arr[index] <= target:
+            take = self.foo(index-1, arr, target - arr[index], dp)
 
-        maxSum = float("-inf")
-        for x in dirs:
-            for y in dirs:
-                curr = g[i][j1] + g[i][j2] if j1 != j2 else g[i][j1]
-                maxSum = max(maxSum, curr + self.foo(i-1, j1 + x, j2 + y, g, dp))
+        dp[index][target] = notTake or take
+        return dp[index][target]
 
-        dp[i][j1][j2] = maxSum
-        return maxSum
-        
-    def aliceAndBob(self, n, m, g):
-        prev = [[0] * m for _ in range(m)]
+    def isSubsetSum(self, arr, target):
+        n = len(arr)
+        prev = [False] * (target+1)
 
-        for j1 in range(m):
-            for j2 in range(m):
-                if j1 != j2:
-                    prev[j1][j2] = g[0][j1] + g[0][j2]
-                else:
-                    prev[j1][j2] = g[0][j1]
+        for t in range(target + 1):
+            if t == arr[0]:
+                prev[t] = True
+
 
         for i in range(1, n):
-            curr = [[0] * m for _ in range(m)]
-            for j1 in range(m-1, -1, -1):
-                for j2 in range(m-1, -1, -1):
-                    dirs = [-1, 0, 1]
-                    
-                    maxSum = float("-inf")
-                    for x in dirs:
-                        for y in dirs:
-                            currSum = g[i][j1] + g[i][j2] if j1 != j2 else g[i][j1]
+            curr = [False] * (target+1)
+            for t in range(target + 1):
+                if t == 0:
+                    curr[t] =  True
 
-                            if j1 + x in range(m) and j2 + y in range(m):
-                                maxSum = max(maxSum, currSum + prev[j1 + x][j2 + y]) 
+                else:
+                    notTake = prev[t]
+                    take = False
+                    if t > 0 and arr[i] <= t:
+                        take = prev[t - arr[i]]
             
-                    curr[j1][j2] = maxSum
+                    curr[t] = notTake or take
             prev = curr
+        return prev[target]
 
-        return prev[0][m-1]
 
-        # Your code goes here
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.aliceAndBob(3, 4, [[2, 3, 1, 2], [3, 4, 2, 2], [5, 6, 3, 5]]))
-    print(dummy.aliceAndBob(2, 3, [[4, 1, 2], [7, 3, 5]]))
+    print(dummy.isSubsetSum([1, 2, 7, 3], 6))
+    print(dummy.isSubsetSum([2, 3, 5], 6))
+    print(dummy.isSubsetSum([7, 54, 4, 12, 15, 5], 9))
