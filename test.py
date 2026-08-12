@@ -1,55 +1,37 @@
+from typing import List
 class Solution:
-    def foo(self, index, arr, target, dp):
-        if dp[index][target] != -1:
-            return dp[index][target]
+    def canPartition(self, arr: List[int]) -> bool:
+        target = sum(arr)
+        dp = [[False]*(target+1) for _ in range(len(arr))]
+
+        for i in range(len(arr)):
+            dp[i][0] = True
+
+        dp[0][arr[0]] = True
+
+        for i in range(1, len(arr)):
+            for target in range(1, target+1):
+                notTake = dp[i-1][target]
+                take = False
+
+                if target >= arr[i]:
+                    take = dp[i-1][target-arr[i]]
         
-        if index == 0:
-            if target == arr[index]:
+                dp[i][target] = notTake or take
+
+        n = len(arr)
+        for t in range(0, target+1 // 2):
+            check = target - t
+
+            if check == t and dp[n-1][check] == True and dp[n-1][t] == True:
                 return True
 
-            else:
-                return False
+        return False
 
-        if target == 0:
-            return True
-
-        notTake = self.foo(index-1, arr, target, dp)
-        take = False
-        if target > 0 and arr[index] <= target:
-            take = self.foo(index-1, arr, target - arr[index], dp)
-
-        dp[index][target] = notTake or take
-        return dp[index][target]
-
-    def isSubsetSum(self, arr, target):
-        n = len(arr)
-        prev = [False] * (target+1)
-
-        for t in range(target + 1):
-            if t == arr[0]:
-                prev[t] = True
-
-
-        for i in range(1, n):
-            curr = [False] * (target+1)
-            for t in range(target + 1):
-                if t == 0:
-                    curr[t] =  True
-
-                else:
-                    notTake = prev[t]
-                    take = False
-                    if t > 0 and arr[i] <= t:
-                        take = prev[t - arr[i]]
-            
-                    curr[t] = notTake or take
-            prev = curr
-        return prev[target]
-
-
+# last row represents the sums we can form using all elements of the array
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.isSubsetSum([1, 2, 7, 3], 6))
-    print(dummy.isSubsetSum([2, 3, 5], 6))
-    print(dummy.isSubsetSum([7, 54, 4, 12, 15, 5], 9))
+    print(dummy.canPartition([1, 2, 7, 3]))
+    print(dummy.canPartition([2, 3, 5]))
+    print(dummy.canPartition([7, 54, 4, 12, 15, 5]))
