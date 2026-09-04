@@ -1,37 +1,48 @@
-from typing import List
 class Solution:
-    def canPartition(self, arr: List[int]) -> bool:
-        target = sum(arr)
-        dp = [[False]*(target+1) for _ in range(len(arr))]
-
-        for i in range(len(arr)):
-            dp[i][0] = True
-
-        dp[0][arr[0]] = True
-
-        for i in range(1, len(arr)):
-            for target in range(1, target+1):
-                notTake = dp[i-1][target]
-                take = False
-
-                if target >= arr[i]:
-                    take = dp[i-1][target-arr[i]]
+    def foo(self, index, wt, val, n, W, dp):
+        if dp[index][W] != -1:
+            return dp[index][W]
         
-                dp[i][target] = notTake or take
+        if index == 0:
+            if W >= wt[index]:
+                return val[index]
+            else:
+                return 0
 
-        n = len(arr)
-        for t in range(0, target+1 // 2):
-            check = target - t
+        notTake = self.foo(index-1, wt, val, n, W, dp)
+        take = float("-inf")
 
-            if check == t and dp[n-1][check] == True and dp[n-1][t] == True:
-                return True
+        if W >= wt[index]:
+            take = val[index] + self.foo(index-1, wt, val, n, W-wt[index], dp)
 
-        return False
+        dp[index][W] = max(notTake, take)
+        return dp[index][W]
+        
+    def knapsack01(self, wt, val, n, W):
+        prev = [0]*(W+1)
 
-# last row represents the sums we can form using all elements of the array
+        for w in range(W+1):
+            if w >= wt[0]:
+                prev[w] = val[0]
+
+
+        for index in range(1, n):
+            curr = [0]*(W+1)
+            for w in range(W+1):
+                notTake = prev[w]
+                take = float("-inf")
+        
+                if w >= wt[index]:
+                    take = val[index] + prev[w-wt[index]]
+        
+                curr[w] = max(notTake, take)
+            prev = curr
+        
+        return prev[W]
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.canPartition([1, 2, 7, 3]))
-    print(dummy.canPartition([2, 3, 5]))
-    print(dummy.canPartition([7, 54, 4, 12, 15, 5]))
+    print(dummy.knapsack01([10, 20, 30], [60, 100, 120], 3, 50))
+    print(dummy.knapsack01([5, 4, 6, 3], [10, 40, 30, 50], 4, 10))
+    print(dummy.knapsack01([1, 2, 3, 8, 7, 4], [20, 5, 10, 40, 15, 25], 6, 10))
+    
