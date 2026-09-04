@@ -1,48 +1,44 @@
 class Solution:
-    def foo(self, index, wt, val, n, W, dp):
-        if dp[index][W] != -1:
-            return dp[index][W]
-        
-        if index == 0:
-            if W >= wt[index]:
-                return val[index]
-            else:
-                return 0
+    def foo(self, index, prevIndex, nums, n, dp):
+        if index == n:
+            return 0
 
-        notTake = self.foo(index-1, wt, val, n, W, dp)
+        if dp[index][prevIndex+1] != -1:
+            return dp[index][prevIndex+1]
+
+        notTake = self.foo(index+1, prevIndex, nums, n, dp)
         take = float("-inf")
 
-        if W >= wt[index]:
-            take = val[index] + self.foo(index-1, wt, val, n, W-wt[index], dp)
+        if prevIndex == -1 or nums[index] % nums[prevIndex] == 0:
+            take = 1 + self.foo(index+1, index, nums, n, dp)
 
-        dp[index][W] = max(notTake, take)
-        return dp[index][W]
-        
-    def knapsack01(self, wt, val, n, W):
-        prev = [0]*(W+1)
+        dp[index][prevIndex+1] = max(notTake, take)
+        return dp[index][prevIndex+1]
 
-        for w in range(W+1):
-            if w >= wt[0]:
-                prev[w] = val[0]
+    def largestDivisibleSubset(self, nums):
+        nums.sort()
+        n = len(nums)
+        ahead = [0]*(n+1)
 
-
-        for index in range(1, n):
-            curr = [0]*(W+1)
-            for w in range(W+1):
-                notTake = prev[w]
+        for index in range(n-1, -1, -1):
+            curr = [0]*(n+1)
+            for prevIndex in range(index-1, -2, -1):
+                notTake = ahead[prevIndex+1]
                 take = float("-inf")
         
-                if w >= wt[index]:
-                    take = val[index] + prev[w-wt[index]]
+                if prevIndex == -1 or nums[index] % nums[prevIndex] == 0:
+                    take = 1 + ahead[index+1]
         
-                curr[w] = max(notTake, take)
-            prev = curr
+                curr[prevIndex+1] = max(notTake, take)
+            ahead = curr
         
-        return prev[W]
+        return ahead[0]
+      
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.knapsack01([10, 20, 30], [60, 100, 120], 3, 50))
-    print(dummy.knapsack01([5, 4, 6, 3], [10, 40, 30, 50], 4, 10))
-    print(dummy.knapsack01([1, 2, 3, 8, 7, 4], [20, 5, 10, 40, 15, 25], 6, 10))
-    
+    print(dummy.largestDivisibleSubset([2,4,8,9]))
+    print(dummy.largestDivisibleSubset([3, 5, 10, 20]))
+    print(dummy.largestDivisibleSubset([16, 8, 2, 4, 32]))
+    print(dummy.largestDivisibleSubset([7, 14, 28, 3]))
+    print(dummy.largestDivisibleSubset([1, 16, 7, 8, 4]))
