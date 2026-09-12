@@ -1,44 +1,38 @@
 class Solution:
-    def foo(self, index, prevIndex, nums, n, dp):
-        if index == n:
+    def foo(self, i, j, str1, str2, dp):
+        if i == 0:
             return 0
 
-        if dp[index][prevIndex+1] != -1:
-            return dp[index][prevIndex+1]
+        if j == 0:
+            return 0
 
-        notTake = self.foo(index+1, prevIndex, nums, n, dp)
-        take = float("-inf")
+        if dp[i][j] != -1:
+            return dp[i][j]
 
-        if prevIndex == -1 or nums[index] % nums[prevIndex] == 0:
-            take = 1 + self.foo(index+1, index, nums, n, dp)
+        if str1[i-1] == str2[j-1]:
+            dp[i][j] = 1 + self.foo(i-1, j-1, str1, str2, dp)
+            return dp[i][j]
 
-        dp[index][prevIndex+1] = max(notTake, take)
-        return dp[index][prevIndex+1]
+        dp[i][j] = max(self.foo(i-1, j, str1, str2, dp), self.foo(i, j-1, str1, str2, dp))
+        return dp[i][j]
 
-    def largestDivisibleSubset(self, nums):
-        nums.sort()
-        n = len(nums)
-        ahead = [0]*(n+1)
+    def lcs(self, str1, str2):
+        m = len(str1)
+        n = len(str2)
+        dp = [[0] * (n+1) for _ in range(m+1)]
 
-        for index in range(n-1, -1, -1):
-            curr = [0]*(n+1)
-            for prevIndex in range(index-1, -2, -1):
-                notTake = ahead[prevIndex+1]
-                take = float("-inf")
-        
-                if prevIndex == -1 or nums[index] % nums[prevIndex] == 0:
-                    take = 1 + ahead[index+1]
-        
-                curr[prevIndex+1] = max(notTake, take)
-            ahead = curr
-        
-        return ahead[0]
-      
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if str1[i-1] == str2[j-1]:
+                    dp[i][j] = 1 + dp[i-1][j-1]
+                else:
+                    dp[i][j] = 0
+
+        return dp[m][n]
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.largestDivisibleSubset([2,4,8,9]))
-    print(dummy.largestDivisibleSubset([3, 5, 10, 20]))
-    print(dummy.largestDivisibleSubset([16, 8, 2, 4, 32]))
-    print(dummy.largestDivisibleSubset([7, 14, 28, 3]))
-    print(dummy.largestDivisibleSubset([1, 16, 7, 8, 4]))
+    print(dummy.lcs("bdefg", "bfg"))
+    print(dummy.lcs("mnop", "mnq"))
+    print(dummy.lcs("abc","dafb"))
+    print(dummy.lcs("acd", "ced"))
