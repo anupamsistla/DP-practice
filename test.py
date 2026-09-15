@@ -1,38 +1,40 @@
 class Solution:
-    def foo(self, i, j, str1, str2, dp):
-        if i == 0:
-            return 0
+    def shortestCommonSupersequence(self, str1: str, str2: str) -> str:
+        n = len(str1)
+        m = len(str2)
+        dp = [[0]*(m+1) for _ in range(n+1)]
 
-        if j == 0:
-            return 0
-
-        if dp[i][j] != -1:
-            return dp[i][j]
-
-        if str1[i-1] == str2[j-1]:
-            dp[i][j] = 1 + self.foo(i-1, j-1, str1, str2, dp)
-            return dp[i][j]
-
-        dp[i][j] = max(self.foo(i-1, j, str1, str2, dp), self.foo(i, j-1, str1, str2, dp))
-        return dp[i][j]
-
-    def lcs(self, str1, str2):
-        m = len(str1)
-        n = len(str2)
-        dp = [[0] * (n+1) for _ in range(m+1)]
-
-        for i in range(1, m+1):
-            for j in range(1, n+1):
+        for i in range(1, n+1):
+            for j in range(1, m+1):
                 if str1[i-1] == str2[j-1]:
                     dp[i][j] = 1 + dp[i-1][j-1]
+                
                 else:
-                    dp[i][j] = 0
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
 
-        return dp[m][n]
+        i, j = n, m
+        res = ""
+
+        while i > 0 and j > 0:
+            if str1[i-1] == str2[j-1]:
+                res = str1[i-1] + res
+                i -= 1
+                j -= 1
+
+            else:
+                if dp[i-1][j] >= dp[i][j-1]:
+                    res = str1[i-1] + res
+                    i -= 1
+
+                else:
+                    res = str2[j-1] + res
+                    j -= 1
+        return str1[:i] + str2[:j] + res
+        
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.lcs("bdefg", "bfg"))
-    print(dummy.lcs("mnop", "mnq"))
-    print(dummy.lcs("abc","dafb"))
-    print(dummy.lcs("acd", "ced"))
+    print(dummy.shortestCommonSupersequence("brute", "groot"))
+    print(dummy.shortestCommonSupersequence("mno", "nop"))
+    print(dummy.shortestCommonSupersequence("dynamic","program"))
+    print(dummy.shortestCommonSupersequence("coding", "ninjas"))
