@@ -1,75 +1,47 @@
 class Solution:
-    def foo(self, i, j, str, pat, dp):
-        if i == 0 and j == 0:
-            return True
+    def foo(self, i, rodLength, price, dp):
+        if i == 0:
+            if (i + 1) <= rodLength:
+                return price[0]*rodLength
 
-        if i >= 1 and j == 0:
-            for ii in range(i):
-                if pat[ii] != "*":
-                    return False
+            else:
+                return 0
 
-            return True
+        if dp[i][rodLength] != -1:
+            return dp[i][rodLength]
 
-        if j >= 1 and i == 0:
-            return False
+        notTake = self.foo(i-1, rodLength, price, dp)
+        take = float("-inf")
 
-        if dp[i][j] != -1:
-            return dp[i][j]
+        if rodLength >= (i+1):
+            take = price[i] + self.foo(i, rodLength - (i+1), price, dp)
 
-        if pat[i-1] == str[j-1] or pat[i-1] == "?":
-            dp[i][j] = self.foo(i-1, j-1, str, pat, dp)
-            return dp[i][j]
+        dp[i][rodLength] = max(notTake, take)
+        return dp[i][rodLength]
 
-        if pat[i-1] == "*":
-            dp[i][j] = self.foo(i-1, j, str, pat, dp) or self.foo(i, j-1, str, pat, dp)
-            return dp[i][j]
+    def RodCutting(self, price, n):
+        prev = [0]*(n+1)
 
-        dp[i][j] = False
-        return dp[i][j]
+        for rodLength in range(n+1):
+            if 1 <= rodLength:
+                prev[rodLength] = price[0]*rodLength
+
+        for i in range(1, n):
+            curr = [0]*(n+1)
+            for rodLength in range(0, n+1):
+                notTake = prev[rodLength]
+                take = float("-inf")
         
-
-    def wildCard(self, str: str, pat: str) -> bool:
-        n = len(pat)
-        m = len(str)
-
-        prev = [False] * (m+1)
-
-        prev[0] = True
-
-        for j in range(1, m+1):
-            prev[j] = False
-
-
-        for i in range(1, n+1):
-            curr = [0] * (m+1)
-            flag = True
-            for ii in range(i):
-                if pat[ii] != '*':
-                    flag = False
-
-            curr[0] = flag
-            for j in range(1, m+1):
-                if pat[i-1] == str[j-1] or pat[i-1] == '?':
-                    curr[j] = prev[j-1]
-                
+                if rodLength >= (i+1):
+                    take = price[i] + curr[rodLength - (i+1)]
         
-                elif pat[i-1] == '*':
-                    curr[j] = prev[j] or curr[j-1]
-                
-                else:
-                    curr[j] = False
-
+                curr[rodLength] = max(notTake, take)
             prev = curr
 
-        return prev[m]
-                
-
-
+        return prev[n]
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.wildCard("abdefcd", "ab*cd"))
-    print(dummy.wildCard("xaylmz", "x?y*z"))
-    print(dummy.wildCard("xyza", "x*z"))
-    print(dummy.wildCard("abc", "a**bc"))
-    print(dummy.wildCard("", "****"))
+    print(dummy.RodCutting([1, 6, 8, 9, 10, 19, 7, 20], 8))
+    print(dummy.RodCutting([1, 5, 8, 9], 4))
+    print(dummy.RodCutting([5, 5, 8, 9, 10, 17, 17, 20], 8))
