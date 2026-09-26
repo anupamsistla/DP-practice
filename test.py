@@ -1,47 +1,55 @@
 class Solution:
-    def foo(self, i, rodLength, price, dp):
-        if i == 0:
-            if (i + 1) <= rodLength:
-                return price[0]*rodLength
+    def foo(self, i, coins, amount, dp):
+        if dp[i][amount] != -1:
+            return dp[i][amount]
 
+        if i == 0:
+            if amount % coins[0] == 0:
+                return amount // coins[0]
             else:
                 return 0
 
-        if dp[i][rodLength] != -1:
-            return dp[i][rodLength]
+        notTake = self.foo(i-1, coins, amount, dp)
 
-        notTake = self.foo(i-1, rodLength, price, dp)
-        take = float("-inf")
+        take = float("inf")
 
-        if rodLength >= (i+1):
-            take = price[i] + self.foo(i, rodLength - (i+1), price, dp)
+        if coins[i] <= amount:
+            take = 1 + self.foo(i, coins, amount - coins[i], dp)
 
-        dp[i][rodLength] = max(notTake, take)
-        return dp[i][rodLength]
+        dp[i][amount] = min(notTake, take)
+        return dp[i][amount]
 
-    def RodCutting(self, price, n):
-        prev = [0]*(n+1)
+    
+    def MinimumCoins(self, coins, amount):
+        n = len(coins)
+        prev = [0] * (amount + 1)
 
-        for rodLength in range(n+1):
-            if 1 <= rodLength:
-                prev[rodLength] = price[0]*rodLength
+        for a in range(amount+1):
+            if a % coins[0] == 0:
+                prev[a] = a // coins[0]
+
 
         for i in range(1, n):
-            curr = [0]*(n+1)
-            for rodLength in range(0, n+1):
-                notTake = prev[rodLength]
-                take = float("-inf")
+            curr = [0] * (amount + 1)
+            for amount in range(0, amount+1):
+                notTake = prev[amount]
+                
+                take = float("inf")
         
-                if rodLength >= (i+1):
-                    take = price[i] + curr[rodLength - (i+1)]
+                if coins[i] <= amount:
+                    take = 1 + curr[amount - coins[i]]
         
-                curr[rodLength] = max(notTake, take)
+                curr[amount] = min(notTake, take)
             prev = curr
 
-        return prev[n]
+        return prev[amount]
+
 
 if __name__ == "__main__":
     dummy = Solution()
-    print(dummy.RodCutting([1, 6, 8, 9, 10, 19, 7, 20], 8))
-    print(dummy.RodCutting([1, 5, 8, 9], 4))
-    print(dummy.RodCutting([5, 5, 8, 9, 10, 17, 17, 20], 8))
+    print(dummy.MinimumCoins([1, 2, 5], 11))
+    print(dummy.MinimumCoins([2, 5], 3))
+    print(dummy.MinimumCoins([10], 5))
+    print(dummy.MinimumCoins([1, 2, 3], 8))
+    print(dummy.MinimumCoins([1, 2], 9))
+    print(dummy.MinimumCoins([1, 3, 5], 7))
